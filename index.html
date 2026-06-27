@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sushi Kounter</title>
+    <!-- Collegamento al Manifest della PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff4757">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent-color: #ff4757;
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+
+        .dashboard {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .total-calories {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .macro-box {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .macro-val {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .macro-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .menu-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .btn-sushi {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-sushi:active {
+            transform: scale(0.97);
+            background-color: #2a2a2a;
+        }
+
+        .btn-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .btn-details {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-reset {
+            background-color: #333333;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🍣 Sushi Kounter</h1>
+    </header>
+
+    <div class="dashboard">
+        <div class="total-calories" id="total-kcal">0 kcal</div>
+        <div class="macros-grid">
+            <div class="macro-box">
+                <div class="macro-val" id="total-pro">0.0g</div>
+                <div class="macro-label">Proteine</div>
+            </div>
+            <div class="macro-box">
+                <div class="macro-val" id="total-cho">0.0g</div>
+                <div class="macro-label">Carboidrati</div>
+            </div>
+            <div class="macro-box">
+                <div class="macro-val" id="total-fat">0.0g</div>
+                <div class="macro-label">Grassi</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-container"></div>
+
+    <div class="controls">
+        <button class="btn-action btn-reset" onclick="resetPasto()">🔄 Nuovo Pasto</button>
+    </div>
+</div>
+
+<script>
+    // DATABASE CALIBRATO SULLE NOSTRE PORZIONI REALI
+    const databaseSushi = {
+        "Uramaki (1 pz ~28-30g)": [
+            { id: "ura_ton_sal", name: "Uramaki Tonno e Salmone", kcal: 42, pro: 2.2, cho: 6.5, fat: 0.75 },
+            { id: "ura_sal_avoph", name: "Uramaki Salmone Avo Phila", kcal: 49, pro: 1.95, cho: 6.75, fat: 1.6 },
+            { id: "ura_sal_avo", name: "Uramaki Salmone e Avocado", kcal: 43, pro: 2.05, cho: 6.5, fat: 0.9 },
+            { id: "ura_ton_avo", name: "Uramaki Tonno e Avocado", kcal: 41, pro: 2.0, cho: 6.5, fat: 0.75 },
+            { id: "ura_bra_avo", name: "Uramaki Branzino e Avocado", kcal: 39, pro: 1.55, cho: 6.5, fat: 0.75 },
+            { id: "ura_ven_sal", name: "Uramaki Venere Salm. Avo", kcal: 43, pro: 2.1, cho: 6.5, fat: 0.9 },
+            { id: "ura_solo_sal", name: "Uramaki solo Salmone", kcal: 41, pro: 2.1, cho: 6.5, fat: 0.75 }
+        ],
+        "Nigiri (1 pz ~26g)": [
+            { id: "nig_sal", name: "Nigiri Salmone", kcal: 51, pro: 2.3, cho: 7.5, fat: 1.2 },
+            { id: "nig_ton", name: "Nigiri Tonno", kcal: 46, pro: 2.5, cho: 7.5, fat: 0.6 },
+            { id: "nig_bra", name: "Nigiri Branzino", kcal: 44, pro: 2.1, cho: 7.5, fat: 0.6 }
+        ],
+        "Sashimi & Carpacci (1 pz)": [
+            { id: "sas_sal", name: "Sashimi Salmone (~10g)", kcal: 19, pro: 2.0, cho: 0.0, fat: 1.17 },
+            { id: "sas_ton", name: "Sashimi Tonno (~10g)", kcal: 11, pro: 2.33, cho: 0.0, fat: 0.1 },
+            { id: "sas_bra", name: "Sashimi Branzino (~10g)", kcal: 9, pro: 1.7, cho: 0.0, fat: 0.23 },
+            { id: "car_sal", name: "Carpaccio Salmone (~8g)", kcal: 15, pro: 1.6, cho: 0.0, fat: 0.95 },
+            { id: "car_ton", name: "Carpaccio Tonno (~8g)", kcal: 9, pro: 1.85, cho: 0.0, fat: 0.1 },
+            { id: "car_bra", name: "Carpaccio Branzino (~8g)", kcal: 7.5, pro: 1.35, cho: 0.0, fat: 0.2 },
+            { id: "gam_cru", name: "Gambero Crudo (~12g)", kcal: 10, pro: 2.0, cho: 0.1, fat: 0.1 },
+            { id: "tar_sal", name: "Tartare Salmone Small (30g)", kcal: 56, pro: 6.0, cho: 0.0, fat: 3.5 }
+        ],
+        "Sfizi & Caldi (1 pz)": [
+            { id: "eda_singolo", name: "Edamame Sgusciato (1g)", kcal: 1.22, pro: 0.11, cho: 0.08, fat: 0.06 },
+            { id: "spi_gam", name: "Spiedino Gamberetti (Modesto)", kcal: 26, pro: 5.0, cho: 0.2, fat: 0.6 },
+            { id: "spi_cal", name: "Spiedino Calamaro (Modesto)", kcal: 30.5, pro: 5.6, cho: 0.35, fat: 0.7 },
+            { id: "gam_tem", name: "Gambero in Tempura", kcal: 77, pro: 3.4, cho: 6.6, fat: 4.1 }
+        ]
+    };
+
+    let statoPasto = { kcal: 0, pro: 0, cho: 0, fat: 0 };
+
+    function generaInterfaccia() {
+        const container = document.getElementById('menu-container');
+        container.innerHTML = '';
+
+        for (const [sezione, piatti] of Object.entries(databaseSushi)) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'menu-section';
+            sectionDiv.innerHTML = `<div class="section-title">${sezione}</div>`;
+
+            const grid = document.createElement('div');
+            grid.className = 'buttons-grid';
+
+            piatti.forEach(piatto => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-sushi';
+                btn.onclick = () => aggiungiPezzo(piatto);
+                
+                let dettagliText = `${piatto.kcal} kcal | P:${piatto.pro}g`;
+                if(piatto.id === "eda_singolo") dettagliText = "Valori per singolo chicco";
+
+                btn.innerHTML = `
+                    <div class="btn-name">${piatto.name}</div>
+                    <div class="btn-details">${dettagliText}</div>
+                `;
+                grid.appendChild(btn);
+            });
+
+            sectionDiv.appendChild(grid);
+            container.appendChild(sectionDiv);
+        }
+    }
+
+    function aggiungiPezzo(piatto) {
+        let moltiplicatore = 1;
+        
+        if (piatto.id === "eda_singolo") {
+            const quantita = prompt("Quanti chicchi di edamame hai mangiato?", "40");
+            if (quantita === null || isNaN(quantita) || quantita <= 0) return;
+            moltiplicatore = parseInt(quantita);
+        }
+
+        statoPasto.kcal += piatto.kcal * moltiplicatore;
+        statoPasto.pro += piatto.pro * moltiplicatore;
+        statoPasto.cho += piatto.cho * moltiplicatore;
+        statoPasto.fat += piatto.fat * moltiplicatore;
+
+        aggiornaDashboard();
+    }
+
+    function aggiornaDashboard() {
+        document.getElementById('total-kcal').innerText = `${Math.round(statoPasto.kcal)} kcal`;
+        document.getElementById('total-pro').innerText = `${statoPasto.pro.toFixed(1)}g`;
+        document.getElementById('total-cho').innerText = `${statoPasto.cho.toFixed(1)}g`;
+        document.getElementById('total-fat').innerText = `${statoPasto.fat.toFixed(1)}g`;
+    }
+
+    function resetPasto() {
+        if (confirm("Vuoi azzerare il pasto attuale?")) {
+            statoPasto = { kcal: 0, pro: 0, cho: 0, fat: 0 };
+            aggiornaDashboard();
+        }
+    }
+
+    // REGISTRAZIONE DEL SERVICE WORKER PER FUNZIONAMENTO PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registrato con successo!', reg))
+          .catch(err => console.log('Errore registrazione Service Worker:', err));
+      });
+    }
+
+    generaInterfaccia();
+</script>
+</body>
+</html>
