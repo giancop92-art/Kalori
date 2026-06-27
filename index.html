@@ -16,6 +16,7 @@
             --card-bg: #1e1e1e;
             --surface-accent: #2a2a2a;
             --accent-color: #ff4757;
+            --success-color: #2ed573;
             --text-color: #ffffff;
             --text-muted: #a0a0a0;
             --border-color: #2d2d2d;
@@ -75,13 +76,28 @@
             backdrop-filter: blur(10px);
         }
 
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
         .total-calories {
-            text-align: center;
             font-size: 2.4rem;
             font-weight: 800;
             color: var(--accent-color);
-            margin-bottom: 12px;
             line-height: 1;
+        }
+
+        .total-pieces {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .macros-grid {
@@ -104,6 +120,463 @@
         }
 
         .macro-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .menu-section {
+            margin-top: 8px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            padding-left: 4px;
+        }
+
+        .buttons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sushi-row {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .sushi-row.has-count {
+            border-color: rgba(255, 71, 87, 0.4);
+            background-color: rgba(255, 71, 87, 0.02);
+        }
+
+        .sushi-info {
+            flex: 1;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+
+        .btn-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .btn-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Controlli Stepper */
+        .stepper-controls {
+            display: flex;
+            align-items: center;
+            background-color: var(--surface-accent);
+            border-radius: 20px;
+            padding: 2px;
+            min-height: 40px;
+        }
+
+        .btn-step {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-step:active {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-minus {
+            color: var(--text-muted);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .has-count .btn-minus {
+            opacity: 1;
+            pointer-events: auto;
+            color: var(--accent-color);
+        }
+
+        .counter-val {
+            min-width: 28px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .has-count .counter-val {
+            color: var(--text-color);
+        }
+
+        /* Footer Bottoni di Azione */
+        .controls {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        .btn-save {
+            background-color: var(--success-color);
+            color: #121212;
+        }
+
+        .btn-reset {
+            background-color: var(--surface-accent);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* Modale Resoconto Finale */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--success-color);
+        }
+
+        .summary-box {
+            background-color: var(--surface-accent);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid rgba(255,255,255,0.05);
+            user-select: text; /* permette di copiare il testo sul telefono */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🍣 Sushi Kounter</h1>
+    </header>
+
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="total-calories" id="total-kcal">0 kcal</div>
+            <div class="total-pieces" id="total-items-count">0 pz</div>
+        </div>
+        <div class="macros-grid">
+            <div class="macro-box">
+                <div class="macro-val" id="total-pro">0.0g</div>
+                <div class="macro-label">Proteine</div>
+            </div>
+            <div class="macro-box">
+                <div class="macro-val" id="total-cho">0.0g</div>
+                <div class="macro-label">Carboidrati</div>
+            </div>
+            <div class="macro-box">
+                <div class="macro-val" id="total-fat">0.0g</div>
+                <div class="macro-label">Grassi</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-container"></div>
+
+    <div class="controls">
+        <button class="btn-action btn-save" onclick="concludiPasto()">💾 Concludi e Salva Pasto</button>
+        <button class="btn-action btn-reset" onclick="resetPasto()">🔄 Azzera Contatori</button>
+    </div>
+</div>
+
+<!-- Struttura del Modale di Riepilogo -->
+<div id="summary-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-title">🎉 Resoconto Pasto Salvato!</div>
+        <div class="summary-box" id="summary-text"></div>
+        <button class="btn-action" style="background-color: var(--accent-color); color: white;" onclick="chiudiModale()">Chiudi</button>
+    </div>
+</div>
+
+<script>
+    // DATABASE CALIBRATO SULLE NOSTRE PORZIONI REALI (Preservato)
+    const databaseSushi = {
+        "Uramaki (1 pz ~28-30g)": [
+            { id: "ura_ton_sal", name: "Uramaki Tonno e Salmone", kcal: 42, pro: 2.2, cho: 6.5, fat: 0.75 },
+            { id: "ura_sal_avoph", name: "Uramaki Salmone Avo Phila", kcal: 49, pro: 1.95, cho: 6.75, fat: 1.6 },
+            { id: "ura_sal_avo", name: "Uramaki Salmone e Avocado", kcal: 43, pro: 2.05, cho: 6.5, fat: 0.9 },
+            { id: "ura_ton_avo", name: "Uramaki Tonno e Avocado", kcal: 41, pro: 2.0, cho: 6.5, fat: 0.75 },
+            { id: "ura_bra_avo", name: "Uramaki Branzino e Avocado", kcal: 39, pro: 1.55, cho: 6.5, fat: 0.75 },
+            { id: "ura_ven_sal", name: "Uramaki Venere Salm. Avo", kcal: 43, pro: 2.1, cho: 6.5, fat: 0.9 },
+            { id: "ura_solo_sal", name: "Uramaki solo Salmone", kcal: 41, pro: 2.1, cho: 6.5, fat: 0.75 }
+        ],
+        "Nigiri (1 pz ~26g)": [
+            { id: "nig_sal", name: "Nigiri Salmone", kcal: 51, pro: 2.3, cho: 7.5, fat: 1.2 },
+            { id: "nig_ton", name: "Nigiri Tonno", kcal: 46, pro: 2.5, cho: 7.5, fat: 0.6 },
+            { id: "nig_bra", name: "Nigiri Branzino", kcal: 44, pro: 2.1, cho: 7.5, fat: 0.6 }
+        ],
+        "Sashimi & Carpacci (1 pz)": [
+            { id: "sas_sal", name: "Sashimi Salmone (~10g)", kcal: 19, pro: 2.0, cho: 0.0, fat: 1.17 },
+            { id: "sas_ton", name: "Sashimi Tonno (~10g)", kcal: 11, pro: 2.33, cho: 0.0, fat: 0.1 },
+            { id: "sas_bra", name: "Sashimi Branzino (~10g)", kcal: 9, pro: 1.7, cho: 0.0, fat: 0.23 },
+            { id: "car_sal", name: "Carpaccio Salmone (~8g)", kcal: 15, pro: 1.6, cho: 0.0, fat: 0.95 },
+            { id: "car_ton", name: "Carpaccio Tonno (~8g)", kcal: 9, pro: 1.85, cho: 0.0, fat: 0.1 },
+            { id: "car_bra", name: "Carpaccio Branzino (~8g)", kcal: 7.5, pro: 1.35, cho: 0.0, fat: 0.2 },
+            { id: "gam_cru", name: "Gambero Crudo (~12g)", kcal: 10, pro: 2.0, cho: 0.1, fat: 0.1 },
+            { id: "tar_sal", name: "Tartare Salmone Small (30g)", kcal: 56, pro: 6.0, cho: 0.0, fat: 3.5 }
+        ],
+        "Sfizi & Caldi (1 pz)": [
+            { id: "eda_singolo", name: "Edamame Sgusciato (1g)", kcal: 1.22, pro: 0.11, cho: 0.08, fat: 0.06 },
+            { id: "spi_gam", name: "Spiedino Gamberetti (Modesto)", kcal: 26, pro: 5.0, cho: 0.2, fat: 0.6 },
+            { id: "spi_cal", name: "Spiedino Calamaro (Modesto)", kcal: 30.5, pro: 5.6, cho: 0.35, fat: 0.7 },
+            { id: "gam_tem", name: "Gambero in Tempura", kcal: 77, pro: 3.4, cho: 6.6, fat: 4.1 }
+        ]
+    };
+
+    let conteggiPiatti = JSON.parse(localStorage.getItem('sushi_kounter_counts')) || {};
+
+    const piattoMappa = {};
+    Object.values(databaseSushi).flat().forEach(p => {
+        piattoMappa[p.id] = p;
+    });
+
+    function generaInterfaccia() {
+        const container = document.getElementById('menu-container');
+        container.innerHTML = '';
+
+        for (const [sezione, piatti] of Object.entries(databaseSushi)) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'menu-section';
+            sectionDiv.innerHTML = `<div class="section-title">${sezione}</div>`;
+
+            const list = document.createElement('div');
+            list.className = 'buttons-list';
+
+            piatti.forEach(piatto => {
+                const count = conteggiPiatti[piatto.id] || 0;
+                const row = document.createElement('div');
+                row.className = `sushi-row ${count > 0 ? 'has-count' : ''}`;
+                row.id = `row-${piatto.id}`;
+                
+                let dettagliText = `${piatto.kcal} kcal | P:${piatto.pro}g`;
+                if(piatto.id === "eda_singolo") dettagliText = "Valori per singolo chicco";
+
+                row.innerHTML = `
+                    <div class="sushi-info" onclick="modificaPezzo('${piatto.id}', 1)">
+                        <div class="btn-name">${piatto.name}</div>
+                        <div class="btn-details">${dettagliText}</div>
+                    </div>
+                    <div class="stepper-controls">
+                        <button class="btn-step btn-minus" onclick="modificaPezzo('${piatto.id}', -1)">−</button>
+                        <span class="counter-val" id="count-${piatto.id}">${count}</span>
+                        <button class="btn-step btn-plus" onclick="modificaPezzo('${piatto.id}', 1)">+</button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+
+            sectionDiv.appendChild(list);
+            container.appendChild(sectionDiv);
+        }
+        aggiornaDashboard();
+    }
+
+    function modificaPezzo(id, cambio) {
+        const piatto = piattoMappa[id];
+        if (!piatto) return;
+
+        let attuale = conteggiPiatti[id] || 0;
+
+        if (id === "eda_singolo" && cambio > 0 && attuale === 0) {
+            const quantita = prompt("Quanti chicchi di edamame hai mangiato?", "40");
+            if (quantita === null || isNaN(quantita) || quantita <= 0) return;
+            attuale = parseInt(quantita);
+        } else {
+            attuale += cambio;
+        }
+
+        if (attuale <= 0) {
+            delete conteggiPiatti[id];
+        } else {
+            conteggiPiatti[id] = attuale;
+        }
+
+        localStorage.setItem('sushi_kounter_counts', JSON.stringify(conteggiPiatti));
+        
+        const rowEl = document.getElementById(`row-${id}`);
+        const countEl = document.getElementById(`count-${id}`);
+        if (rowEl && countEl) {
+            countEl.innerText = conteggiPiatti[id] || 0;
+            if ((conteggiPiatti[id] || 0) > 0) {
+                rowEl.classList.add('has-count');
+            } else {
+                rowEl.classList.remove('has-count');
+            }
+        }
+
+        aggiornaDashboard();
+    }
+
+    function aggiornaDashboard() {
+        let kcal = 0, pro = 0, cho = 0, fat = 0, pezziTotali = 0;
+
+        for (const [id, qty] of Object.entries(conteggiPiatti)) {
+            const piatto = piattoMappa[id];
+            if (piatto) {
+                kcal += piatto.kcal * qty;
+                pro += piatto.pro * qty;
+                cho += piatto.cho * qty;
+                fat += piatto.fat * qty;
+                // Edamame escluso dal calcolo dei pezzi principali per coerenza logica visiva
+                if(id !== "eda_singolo") {
+                    pezziTotali += qty;
+                }
+            }
+        }
+
+        document.getElementById('total-kcal').innerText = `${Math.round(kcal)} kcal`;
+        document.getElementById('total-pro').innerText = `${pro.toFixed(1)}g`;
+        document.getElementById('total-cho').innerText = `${cho.toFixed(1)}g`;
+        document.getElementById('total-fat').innerText = `${fat.toFixed(1)}g`;
+        document.getElementById('total-items-count').innerText = `${pezziTotali} pz`;
+    }
+
+    function concludiPasto() {
+        if (Object.keys(conteggiPiatti).length === 0) {
+            alert("Non hai ancora inserito nessun elemento nel pasto attuale!");
+            return;
+        }
+
+        let kcal = 0, pro = 0, cho = 0, fat = 0, pezziTotali = 0;
+        let listaPiattiTesto = "";
+
+        for (const [id, qty] of Object.entries(conteggiPiatti)) {
+            const piatto = piattoMappa[id];
+            if (piatto) {
+                kcal += piatto.kcal * qty;
+                pro += piatto.pro * qty;
+                cho += piatto.cho * qty;
+                fat += piatto.fat * qty;
+                
+                if(id !== "eda_singolo") pezziTotali += qty;
+                
+                listaPiattiTesto += `• ${qty}x ${piatto.name}\n`;
+            }
+        }
+
+        // Creazione del blocco riepilogo testuale chiaro e leggibile
+        const dataOggi = new Date().toLocaleDateString('it-IT');
+        const resocontoTesto = `🍣 SUSHI RECAP - ${dataOggi}\n` +
+            `---------------------------\n` +
+            `🔹 Pezzi Totali: ${pezziTotali} pz\n` +
+            `🔥 Calorie: ${Math.round(kcal)} kcal\n\n` +
+            `🧬 MACRONUTRIENTI:\n` +
+            `• Proteine: ${pro.toFixed(1)}g\n` +
+            `• Carboidrati: ${cho.toFixed(1)}g\n` +
+            `• Grassi: ${fat.toFixed(1)}g\n` +
+            `---------------------------\n` +
+            `📋 DETTAGLIO PIATTI:\n${listaPiattiTesto}`;
+
+        document.getElementById('summary-text').innerText = resocontoTesto;
+        document.getElementById('summary-modal').style.display = 'flex';
+    }
+
+    function chiudiModale() {
+        document.getElementById('summary-modal').style.display = 'none';
+    }
+
+    function resetPasto() {
+        if (confirm("Vuoi azzerare il pasto attuale? Tutti i contatori torneranno a zero.")) {
+            conteggiPiatti = {};
+            localStorage.removeItem('sushi_kounter_counts');
+            generaInterfaccia();
+        }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registrato con successo!', reg))
+          .catch(err => console.log('Errore registrazione Service Worker:', err));
+      });
+    }
+
+    generaInterfaccia();
+</script>
+</body>
+</html>
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-top: 3px;
